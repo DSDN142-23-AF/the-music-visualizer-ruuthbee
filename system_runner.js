@@ -1,6 +1,5 @@
-const canvasWidth = 540;
-const canvasHeight = 960;
-
+const canvasWidth = 1280;
+const canvasHeight = 720;
 
 let mainCanvas;
 
@@ -8,35 +7,35 @@ let textInput;
 let slider1, slider2, slider3, slider4;
 let songButton;
 
-let editorMode = true;          // false when in song mode
-let songLoadStatus = "loading"; // "error", "loaded"
+let editorMode = true; // false when in song mode
+let songLoadStatus = 'loading'; // "error", "loaded"
 let song;
 let songIsPlaying = false;
-let songEpoch = 0;              // millis when song starts
+let songEpoch = 0; // millis when song starts
 let table;
 let words;
 
 function songLoadedError() {
-  songButton.elt.innerHTML = "Song: Load Error";
+  songButton.elt.innerHTML = 'Song: Load Error';
   print(songButton.elt.innerHTML);
-  songLoadStatus = "error";
+  songLoadStatus = 'error';
 }
 
 function songLoaded() {
-  print("Song loaded");
-  songLoadStatus = "loaded";
-  songButton.elt.innerHTML = "run song";
+  print('Song loaded');
+  songLoadStatus = 'loaded';
+  songButton.elt.innerHTML = 'run song';
   songButton.elt.disabled = false;
   // let now = millis();
   // songEpoch = now + 5000;
-  if(debugFastRefresh && getAudioContext().state != "suspended"){
-    switchRunMode()
+  if (debugFastRefresh && getAudioContext().state != 'suspended') {
+    switchRunMode();
   }
 }
 
 function songLoadedSoFar(soFar) {
   let loaded = int(100 * soFar);
-  songButton.elt.innerHTML = "Song: " + loaded + "% loaded";
+  songButton.elt.innerHTML = 'Song: ' + loaded + '% loaded';
   print(songButton.elt.innerHTML);
 }
 
@@ -51,8 +50,8 @@ let volume_length = 0;
 function setup() {
   main_canvas = createCanvas(canvasWidth, canvasHeight);
   main_canvas.parent('canvasContainer');
-  song = loadSound('song.mp3', songLoaded, songLoadedError, songLoadedSoFar);  
-  
+  song = loadSound('song.mp3', songLoaded, songLoadedError, songLoadedSoFar);
+
   frameRate(60);
   angleMode(DEGREES);
 
@@ -82,8 +81,8 @@ function setup() {
   vol4 = [];
   volumes = [vol1, vol2, vol3, vol4];
   volume_table_length = table.getRowCount();
-  for(let i=0; i< volume_table_length;i++) {
-    let row = table["rows"][i].arr;
+  for (let i = 0; i < volume_table_length; i++) {
+    let row = table['rows'][i].arr;
     vol1.push(float(row[1]));
     vol2.push(float(row[2]));
     vol3.push(float(row[3]));
@@ -96,22 +95,27 @@ function setup() {
   }
   volumes[0] = vol1;
   */
-  if(smoothing != 0) {
+  if (smoothing != 0) {
     let radius = map(smoothing, 0, 100, 0, 3);
-    for(let i=0; i<4; i++) {
-      volumes[i] = Taira.smoothen(volumes[i], Taira.ALGORITHMS.GAUSSIAN, 10, radius, true)
+    for (let i = 0; i < 4; i++) {
+      volumes[i] = Taira.smoothen(
+        volumes[i],
+        Taira.ALGORITHMS.GAUSSIAN,
+        10,
+        radius,
+        true
+      );
     }
   }
 }
 
 function switchRunMode() {
-  if(editorMode) {
-    if(songLoadStatus == "loading") {
-      alert("Song still loading...");
+  if (editorMode) {
+    if (songLoadStatus == 'loading') {
+      alert('Song still loading...');
       return;
-    }
-    else if (songLoadStatus == "error") {
-      alert("Cannot switch mode, there was a problem loading the audio")
+    } else if (songLoadStatus == 'error') {
+      alert('Cannot switch mode, there was a problem loading the audio');
       return;
     }
     textInput.elt.disabled = true;
@@ -123,10 +127,9 @@ function switchRunMode() {
     editorMode = false;
     let now = millis();
     songEpoch = now + (debugFastRefresh ? 0 : 5000);
-    songButton.elt.innerHTML = "stop music";
-  }
-  else {
-    if(songIsPlaying) {
+    songButton.elt.innerHTML = 'stop music';
+  } else {
+    if (songIsPlaying) {
       song.stop();
       songIsPlaying = false;
     }
@@ -137,7 +140,7 @@ function switchRunMode() {
     slider4.elt.disabled = false;
 
     editorMode = true;
-    songButton.elt.innerHTML = "start music";
+    songButton.elt.innerHTML = 'start music';
   }
 }
 
@@ -150,50 +153,53 @@ function draw() {
     let s4 = slider4.value();
 
     draw_one_frame(w, s1, s2, s3, s4, 0);
-  }
-  else {
-    if(songEpoch > 0) {
+  } else {
+    if (songEpoch > 0) {
       let now = millis();
       let songOffset = now - songEpoch;
-      if(songOffset < 0) {
+      if (songOffset < 0) {
         background(0);
         let secondsRemaining = songOffset / -1000.0;
         let intSecs = int(secondsRemaining);
-        if(intSecs > 0) {
+        if (intSecs > 0) {
           let remainder = secondsRemaining - intSecs;
           let curAngle = map(remainder, 0, 1, 630, 270);
           // print(secondsRemaining, intSecs, remainder, curAngle);
           noStroke();
           fill(200);
-          arc(width/2, height/2, 400, 400, curAngle, curAngle+10);
+          arc(width / 2, height / 2, 400, 400, curAngle, curAngle + 10);
           stroke(255);
           fill(255);
           textSize(200);
           textAlign(CENTER, CENTER);
-          text(intSecs, width/2, height/2);
+          text(intSecs, width / 2, height / 2);
         }
-        // text("Song starting in: " + secondsRemaining, width/2, height/2)      
-      }
-      else if (!songIsPlaying) {
+        // text("Song starting in: " + secondsRemaining, width/2, height/2)
+      } else if (!songIsPlaying) {
         song.play();
         songIsPlaying = true;
         songEpoch = millis();
-        if (typeof reset_music === "function") {
+        if (typeof reset_music === 'function') {
           reset_music();
         }
       }
     }
-    if(songIsPlaying) {
+    if (songIsPlaying) {
       let curMillis = millis();
       let timeOffset = curMillis - songEpoch;
-      let curSlice = int(60 * timeOffset / 1000.0);
+      let curSlice = int((60 * timeOffset) / 1000.0);
       if (curSlice < volume_table_length) {
         // print("Processing " + curSlice + " of " + table.getRowCount())
         // let row = table["rows"][curSlice].arr
         // draw_one_frame(row);
         // print(row);
-        let row = [volumes[0][curSlice], volumes[1][curSlice], volumes[2][curSlice], volumes[3][curSlice]]
-        cur_words = "";
+        let row = [
+          volumes[0][curSlice],
+          volumes[1][curSlice],
+          volumes[2][curSlice],
+          volumes[3][curSlice],
+        ];
+        cur_words = '';
         if (curSlice < words.length) {
           cur_words = words[curSlice];
         }
@@ -202,8 +208,15 @@ function draw() {
         slider2.value(row[1]);
         slider3.value(row[2]);
         slider4.value(row[3]);
-       // draw_one_frame(cur_words, row[0], row[1], row[2], row[3], curSlice);currentTime()
-       draw_one_frame(cur_words, row[0], row[1], row[2], row[3], song.currentTime());
+        // draw_one_frame(cur_words, row[0], row[1], row[2], row[3], curSlice);currentTime()
+        draw_one_frame(
+          cur_words,
+          row[0],
+          row[1],
+          row[2],
+          row[3],
+          song.currentTime()
+        );
       }
     }
   }
