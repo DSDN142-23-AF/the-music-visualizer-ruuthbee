@@ -72,9 +72,5 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   fill(200, 200, 200);
   rect(4 * bar_spacing, bar_pos_y, bar_width4, 4 * other);
 
-  if (flowersize < 50) {
-    noFill();
-  } else {
-    fill(0);
-  }
+
 }
