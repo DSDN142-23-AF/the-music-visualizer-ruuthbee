@@ -8,16 +8,18 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   textSize(24);
 
   var vocalSize = map(vocal, 0, 100, 0, 150);
+  var vocalStarPos = map(vocal, 0, 100, 0, 0);
 
-  var drumHeight = map(drum, 0, 100, canvasHeight / 2, canvasHeight - 200);
+  var drumHeight = map(drum, 0, 100, 0, 160);
   var drumColour = map(drum, 0, 100, 0, 80);
   var drumHeartC = map(drum, 0, 100, 80, 100);
 
-  var bassHeight = map(bass, 0, 100, canvasHeight / 2, canvasHeight - 200);
+  var bassHeight = map(bass, 0, 100, 0, 160);
   var bassColour = map(bass, 0, 100, 0, 100);
   var fishYbass = map(bass, 0, 100, -50, 50);
 
   var otherOpacity = map(other, 0, 100, 0, 30);
+  var otherWidth = map(other, 0, 100, 0, 30);
   var otherStarSize = map(other, 0, 100, 0, 20);
 
   // moon and stars
@@ -30,20 +32,131 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   let moonlightY = [moonY + moonSize / 2, 720];
   noStroke();
 
-  fill(0, 0, 10, 20);
-  rect(canvasWidth / 2, canvasHeight / 2, 400, 720, 100, 100, 0, 0);
-  rect(canvasWidth / 2, canvasHeight / 2, 500, 720, 100, 100, 0, 0);
-  rect(canvasWidth / 2, canvasHeight / 2, 600, 720, 100, 100, 0, 0);
-  rect(canvasWidth / 2, canvasHeight / 2, 700, 720, 100, 100, 0, 0);
-  rect(canvasWidth / 2, canvasHeight / 2, 800, 720, 100, 100, 0, 0);
+  fill(0, 0, 10, 15);
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    400 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    500 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    600 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    700 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    800 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    900 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    1000 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    1100 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+  rect(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    1200 + otherWidth,
+    720,
+    100,
+    100,
+    0,
+    0
+  );
+
+  //waves
+
+  let waveX = [
+    canvasWidth,
+    canvasWidth / 2,
+    canvasWidth / 3,
+    canvasWidth / 6,
+    0,
+  ];
+  let waveY = 450 - counter;
+  fill(0, 0, 20, 150);
+  strokeWeight(0);
+  beginShape(); //top wave
+  vertex(waveX[0], canvasHeight);
+  vertex(waveX[0], canvasHeight);
+  vertex(waveX[0] + 20, waveY + bassHeight - 50);
+  curveVertex(1280 - waveX[3] + counter, waveY + drumHeight);
+  curveVertex(1280 - waveX[2] + counter, waveY + bassHeight - 50);
+  curveVertex(waveX[1] + counter, waveY + drumHeight);
+  curveVertex(waveX[2] + counter, waveY + bassHeight - 50);
+  curveVertex(waveX[3] + counter, waveY + drumHeight);
+  vertex(waveX[4] - 20, waveY + bassHeight - 50);
+  vertex(waveX[4], canvasHeight);
+  vertex(waveX[4], canvasHeight);
+  endShape();
 
   //moonlight
   fill(80, 80, 60, otherOpacity);
   beginShape();
   vertex(moonlightX[0], moonlightY[0]);
   vertex(moonlightX[1], moonlightY[0]);
-  vertex(moonlightX[2], moonlightY[1]);
-  vertex(moonlightX[3], moonlightY[1]);
+  vertex(moonlightX[2] + counter, moonlightY[1]);
+  vertex(moonlightX[3] + counter, moonlightY[1]);
   endShape(CLOSE);
 
   //moon
@@ -54,8 +167,15 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   ellipse(moonX, moonY, cresentSize);
 
   //stars
-  let starX = [250, 350, 450, 750, 850, 950];
-  let starY = [50, 100, 150];
+  let starX = [
+    250 + vocalStarPos,
+    350 + vocalStarPos,
+    450 + vocalStarPos,
+    750 - vocalStarPos,
+    850 - vocalStarPos,
+    950 - vocalStarPos,
+  ];
+  let starY = [50 - vocalStarPos, 100 - vocalStarPos, 150 - vocalStarPos];
   let starSize = [10, 10 + otherStarSize / 2, 10 + otherStarSize];
   ellipseMode(CENTER);
   fill(80, 80, 60); // pale yellow
@@ -82,35 +202,33 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   ellipse(starX[4], starY[2], starSize[2]);
   ellipse(starX[5], starY[0], starSize[2]);
 
-  //waves
-  fill(0, 0, 20, 150);
-  strokeWeight(0);
-  beginShape(); //top wave
-  vertex(1280, 720);
-  vertex(1280, 720);
-  vertex(1280 + 20, bassHeight - 50);
-  curveVertex(1280 - 1280 / 6 + counter, drumHeight);
-  curveVertex(1280 - 1280 / 3 + counter, bassHeight - 50);
-  curveVertex(1280 / 2 + counter, drumHeight);
-  curveVertex(1280 / 3 + counter, bassHeight - 50);
-  curveVertex(1280 / 6 + counter, drumHeight);
-  vertex(0 - 20, bassHeight - 50);
-  vertex(0, 720);
-  vertex(0, 720);
+  //moonlight on waves
+  noFill();
+  strokeWeight(5);
+  stroke(80, 80, 100, otherOpacity);
+  beginShape();
+  curveVertex(1280 - waveX[3] + counter - 50, waveY + drumHeight + 20);
+  curveVertex(1280 - waveX[2] + counter - 50, waveY + bassHeight - 50 + 20);
+  curveVertex(waveX[1] + counter, waveY + drumHeight + 20);
+  curveVertex(waveX[2] + counter + 50, waveY + bassHeight - 50 + 20);
+  curveVertex(waveX[3] + counter + 50, waveY + drumHeight + 20);
+  endShape();
+
+  strokeWeight(2);
+  beginShape();
+  curveVertex(1280 - waveX[3] + counter - 50, waveY + drumHeight + 10);
+  curveVertex(1280 - waveX[2] + counter - 50, waveY + bassHeight - 50 + 10);
+  curveVertex(waveX[1] + counter, waveY + drumHeight + 10);
+  curveVertex(waveX[2] + counter + 50, waveY + bassHeight - 50 + 10);
+  curveVertex(waveX[3] + counter + 50, waveY + drumHeight + 10);
   endShape();
 
   //fish one
 
   let fishDot = 15;
-  //let fishXpos = 610;
-  // while (fishXpos < 610) {
-  //  fishXpos = -50 + counter * counter;
-  //  console.log(fishXpos);
-  // }
-
-  let fishXpos = 5;
-  while (fishXpos > 0) {
-    fishXpos = fishXpos + counter;
+  let fishXpos = 610;
+  while (fishXpos < 610) {
+    fishXpos = -50 + counter * counter;
   }
 
   let fishX = [
@@ -135,7 +253,7 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
     fishXpos - (fishDot / 2) * 18,
   ];
 
-  let fishY = [600 + fishYbass, 600 - fishYbass];
+  let fishY = [waveY + 210 + fishYbass, waveY + 210 - fishYbass];
   let altDotRow = fishDot / 2;
 
   strokeWeight(2);
