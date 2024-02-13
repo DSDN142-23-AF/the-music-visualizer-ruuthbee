@@ -110,7 +110,7 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
   let fishXpos = 5;
   while (fishXpos > 0) {
-    fishXpos = fishXpos - 1;
+    fishXpos = fishXpos + counter;
   }
 
   let fishX = [
